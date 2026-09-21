@@ -1,0 +1,290 @@
+import type { HardwareProfile } from './types';
+
+/**
+ * Catalogue of widely-deployed wrist PPG optical front ends.
+ *
+ * These are *modelled spec profiles* compiled from public datasheets and
+ * application notes. They are accurate enough to reproduce the qualitative
+ * differences that matter in a pipeline — noise floor, resolution, ambient
+ * rejection, motion coupling — but they are not a substitute for the current
+ * datasheet when you are designing real hardware. Every card in the UI carries
+ * the same caveat via `sourceNote`.
+ */
+export const HARDWARE_CATALOG: HardwareProfile[] = [
+  {
+    id: 'max86141',
+    name: 'MAX86141',
+    vendor: 'Analog Devices (Maxim)',
+    tier: 'flagship',
+    tagline: 'Low-noise dual-channel AFE used in premium wearables',
+    description:
+      'Optical pulse-oximeter and heart-rate sensor AFE with two independent receive channels and very low input-referred noise. The dual receive path lets a design place two photodiodes around the LED array, which both raises collected light and gives the motion canceller a second look at the same pulse.',
+    adcBits: 19,
+    sampleRates: [25, 50, 100, 128, 200, 256, 400, 512],
+    defaultSampleRate: 128,
+    channels: [
+      { wavelength: 'green', nm: 530 },
+      { wavelength: 'red', nm: 660 },
+      { wavelength: 'ir', nm: 880 },
+    ],
+    ledCurrentMaRange: [0, 124],
+    defaultLedCurrentMa: 30,
+    noiseFloorPArms: 8,
+    ambientRejectionDb: 62,
+    dynamicRangeDb: 96,
+    photodiodeAreaMm2: 2.4,
+    motionRobustness: 0.82,
+    typicalCurrentUa: 200,
+    hasDcOffsetCancellation: true,
+    hasAccelerometer: true,
+    highlights: [
+      'Two receive channels give spatial diversity against motion',
+      'Picoamp-class noise floor keeps low-perfusion pulses above the grass',
+      'Hardware ambient subtraction between LED pulses',
+    ],
+    sourceNote: 'Modelled from the MAX86141 datasheet and ADI wearable reference designs.',
+  },
+  {
+    id: 'max30101',
+    name: 'MAX30101',
+    vendor: 'Analog Devices (Maxim)',
+    tier: 'mainstream',
+    tagline: 'The ubiquitous green/red/IR module — the one most prototypes ship with',
+    description:
+      'Integrated module containing green, red and infrared LEDs, a photodetector, optical filtering and an 18-bit ADC in one package. Extremely common in development kits and mid-range wearables, which makes it the default reference point for most published wrist-PPG work.',
+    adcBits: 18,
+    sampleRates: [50, 100, 200, 400, 800],
+    defaultSampleRate: 100,
+    channels: [
+      { wavelength: 'green', nm: 537 },
+      { wavelength: 'red', nm: 660 },
+      { wavelength: 'ir', nm: 880 },
+    ],
+    ledCurrentMaRange: [0, 51],
+    defaultLedCurrentMa: 24,
+    noiseFloorPArms: 22,
+    ambientRejectionDb: 52,
+    dynamicRangeDb: 84,
+    photodiodeAreaMm2: 1.6,
+    motionRobustness: 0.6,
+    typicalCurrentUa: 600,
+    hasDcOffsetCancellation: true,
+    hasAccelerometer: false,
+    highlights: [
+      'Three wavelengths in one 5.6 x 3.3 mm package',
+      'Enough headroom for SpO2 as well as heart rate',
+      'Single photodiode — motion rejection leans entirely on DSP',
+    ],
+    sourceNote: 'Modelled from the MAX30101 datasheet; the most-cited part in wrist-PPG literature.',
+  },
+  {
+    id: 'afe4404',
+    name: 'AFE4404',
+    vendor: 'Texas Instruments',
+    tier: 'flagship',
+    tagline: 'Discrete AFE with 22-bit conversion and aggressive ambient cancellation',
+    description:
+      'Analog front end for discrete optical designs: you bring your own LEDs and photodiode, which means the optical geometry can be tuned for the wrist rather than accepted as given. Transimpedance stage with per-phase ambient subtraction and a 22-bit converter.',
+    adcBits: 22,
+    sampleRates: [25, 50, 100, 125, 250, 500, 1000],
+    defaultSampleRate: 125,
+    channels: [
+      { wavelength: 'green', nm: 525 },
+      { wavelength: 'red', nm: 660 },
+      { wavelength: 'ir', nm: 880 },
+    ],
+    ledCurrentMaRange: [0, 100],
+    defaultLedCurrentMa: 35,
+    noiseFloorPArms: 6,
+    ambientRejectionDb: 68,
+    dynamicRangeDb: 100,
+    photodiodeAreaMm2: 5.0,
+    motionRobustness: 0.78,
+    typicalCurrentUa: 350,
+    hasDcOffsetCancellation: true,
+    hasAccelerometer: true,
+    highlights: [
+      'Discrete photodiode can be sized far larger than an integrated module',
+      'Per-phase ambient subtraction happens before the ADC, not after',
+      'Highest resolution in the catalogue — quantisation is never the limit',
+    ],
+    sourceNote: 'Modelled from the AFE4404 datasheet and TI heart-rate reference designs.',
+  },
+  {
+    id: 'adpd4100',
+    name: 'ADPD4100',
+    vendor: 'Analog Devices',
+    tier: 'research',
+    tagline: 'Multi-slot photometric front end with per-slot gain and timing',
+    description:
+      'Photometric front end designed for multi-wavelength, multi-photodiode arrays. Each time slot has its own LED, gain, integration and sample-rate settings, so a single part can run a green HR channel fast while interleaving slow red/IR slots for SpO2 and a dark slot for ambient estimation.',
+    adcBits: 20,
+    sampleRates: [50, 100, 128, 200, 256, 500, 1000],
+    defaultSampleRate: 256,
+    channels: [
+      { wavelength: 'green', nm: 525 },
+      { wavelength: 'red', nm: 660 },
+      { wavelength: 'ir', nm: 850 },
+    ],
+    ledCurrentMaRange: [0, 150],
+    defaultLedCurrentMa: 40,
+    noiseFloorPArms: 5,
+    ambientRejectionDb: 72,
+    dynamicRangeDb: 104,
+    photodiodeAreaMm2: 6.4,
+    motionRobustness: 0.88,
+    typicalCurrentUa: 450,
+    hasDcOffsetCancellation: true,
+    hasAccelerometer: true,
+    highlights: [
+      'A dedicated dark slot measures ambient directly instead of inferring it',
+      'Best-in-catalogue ambient rejection — usable in direct sunlight',
+      'Photodiode array geometry gives real spatial diversity against motion',
+    ],
+    sourceNote: 'Modelled from the ADPD4100/4101 datasheet and ADI vital-signs application notes.',
+  },
+  {
+    id: 'bh1792glc',
+    name: 'BH1792GLC',
+    vendor: 'ROHM',
+    tier: 'mainstream',
+    tagline: 'Compact dual-green sensor built for continuous low-power HRM',
+    description:
+      'Two green LEDs with an integrated photodiode and 16-bit conversion, aimed squarely at always-on wrist heart rate in small form factors. The two-LED layout illuminates a wider tissue volume than a single emitter, which helps when the sensor sits slightly off the ideal spot.',
+    adcBits: 16,
+    sampleRates: [32, 64, 128, 256],
+    defaultSampleRate: 64,
+    channels: [
+      { wavelength: 'green', nm: 525 },
+      { wavelength: 'ir', nm: 850 },
+    ],
+    ledCurrentMaRange: [0, 60],
+    defaultLedCurrentMa: 20,
+    noiseFloorPArms: 35,
+    ambientRejectionDb: 48,
+    dynamicRangeDb: 76,
+    photodiodeAreaMm2: 1.2,
+    motionRobustness: 0.55,
+    typicalCurrentUa: 200,
+    hasDcOffsetCancellation: true,
+    hasAccelerometer: false,
+    highlights: [
+      'Two green emitters widen the illuminated tissue volume',
+      'Very low power draw for 24/7 wear',
+      '16-bit conversion — quantisation becomes visible at low perfusion',
+    ],
+    sourceNote: 'Modelled from the ROHM BH1792GLC datasheet.',
+  },
+  {
+    id: 'si1143',
+    name: 'Si1143',
+    vendor: 'Silicon Labs',
+    tier: 'budget',
+    tagline: 'Legacy proximity/ALS part repurposed for PPG — the low end of the field',
+    description:
+      'An ambient-light and proximity sensor with three LED drivers that an entire generation of hobbyist and early commercial HRM designs pressed into service as a PPG front end. Included here as the honest low end: it works at rest and falls apart the moment the wrist moves.',
+    adcBits: 16,
+    sampleRates: [25, 50, 100],
+    defaultSampleRate: 50,
+    channels: [
+      { wavelength: 'green', nm: 535 },
+      { wavelength: 'ir', nm: 940 },
+    ],
+    ledCurrentMaRange: [0, 360],
+    defaultLedCurrentMa: 45,
+    noiseFloorPArms: 90,
+    ambientRejectionDb: 36,
+    dynamicRangeDb: 66,
+    photodiodeAreaMm2: 0.9,
+    motionRobustness: 0.32,
+    typicalCurrentUa: 900,
+    hasDcOffsetCancellation: false,
+    hasAccelerometer: false,
+    highlights: [
+      'No hardware DC-offset cancellation — ambient eats the dynamic range',
+      'Poor optical isolation, so motion couples straight into the signal',
+      'Useful for seeing what the DSP stages are actually rescuing you from',
+    ],
+    sourceNote: 'Modelled from the Si114x datasheet and published open-source HRM designs.',
+  },
+  {
+    id: 'pah8011',
+    name: 'PAH8011EI',
+    vendor: 'PixArt Imaging',
+    tier: 'mainstream',
+    tagline: 'Green PPG with a vendor motion-rejection block inside the sensor',
+    description:
+      'Optical heart-rate sensor that ships with its own accelerometer-fused motion-rejection firmware. It represents the common commercial pattern where part of the pipeline you are inspecting here lives inside the sensor and is not yours to change.',
+    adcBits: 16,
+    sampleRates: [20, 25, 50, 100, 200],
+    defaultSampleRate: 100,
+    channels: [{ wavelength: 'green', nm: 515 }],
+    ledCurrentMaRange: [0, 40],
+    defaultLedCurrentMa: 18,
+    noiseFloorPArms: 28,
+    ambientRejectionDb: 55,
+    dynamicRangeDb: 78,
+    photodiodeAreaMm2: 1.4,
+    motionRobustness: 0.72,
+    typicalCurrentUa: 380,
+    hasDcOffsetCancellation: true,
+    hasAccelerometer: true,
+    highlights: [
+      'Single green channel — no SpO2 path at all',
+      'On-sensor motion rejection tuned by the vendor, not by you',
+      'Tight integration keeps the optical stack short and well isolated',
+    ],
+    sourceNote: 'Modelled from PixArt PAH8011 product briefs and integration guides.',
+  },
+  {
+    id: 'ideal',
+    name: 'Ideal Reference Sensor',
+    vendor: 'Simulator',
+    tier: 'reference',
+    tagline: 'Noiseless, infinite-resolution front end — physiology with nothing on top',
+    description:
+      'Not a real part. This front end has no electronic noise, no quantisation, perfect ambient rejection and no motion coupling. Select it to see exactly what the cardiac model is producing, then switch to a real part to see what the silicon adds.',
+    adcBits: 24,
+    sampleRates: [50, 100, 128, 250, 500, 1000],
+    defaultSampleRate: 250,
+    channels: [
+      { wavelength: 'green', nm: 525 },
+      { wavelength: 'red', nm: 660 },
+      { wavelength: 'ir', nm: 880 },
+    ],
+    ledCurrentMaRange: [1, 100],
+    defaultLedCurrentMa: 50,
+    noiseFloorPArms: 0.01,
+    ambientRejectionDb: 140,
+    dynamicRangeDb: 140,
+    photodiodeAreaMm2: 10,
+    motionRobustness: 1,
+    typicalCurrentUa: 0,
+    hasDcOffsetCancellation: true,
+    hasAccelerometer: true,
+    highlights: [
+      'Ground truth for every downstream stage',
+      'Use it to separate model error from sensor error',
+      'Any artefact you see here is physiological, not electronic',
+    ],
+    sourceNote: 'Synthetic control condition — deliberately not a purchasable part.',
+  },
+];
+
+export const HARDWARE_BY_ID: Record<string, HardwareProfile> = Object.fromEntries(
+  HARDWARE_CATALOG.map((h) => [h.id, h]),
+);
+
+export function getHardware(id: string): HardwareProfile {
+  const hw = HARDWARE_BY_ID[id];
+  if (!hw) throw new Error(`Unknown hardware profile: ${id}`);
+  return hw;
+}
+
+export const TIER_LABEL: Record<HardwareProfile['tier'], string> = {
+  research: 'Research grade',
+  flagship: 'Flagship',
+  mainstream: 'Mainstream',
+  budget: 'Budget / legacy',
+  reference: 'Reference',
+};

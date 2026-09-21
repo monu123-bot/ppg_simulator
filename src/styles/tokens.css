@@ -1,0 +1,111 @@
+/*
+ * Design tokens.
+ *
+ * Dark is the primary mode — this is an instrument, and instruments are read in
+ * dim rooms next to other instruments. Light is a selected second mode, not an
+ * inverted first one: the series colours are re-stepped for the light surface
+ * rather than flipped, and both sets are validated against their own surface
+ * for lightness band, chroma, colour-vision separation and contrast.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* --- surfaces */
+  --plane: #0d0d0d;
+  --surface: #1a1a19;
+  --surface-raised: #232322;
+  --surface-sunken: #131312;
+  --surface-hover: #2a2a28;
+
+  /* --- ink */
+  --ink: #ffffff;
+  --ink-secondary: #c3c2b7;
+  --ink-muted: #898781;
+
+  /* --- lines */
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --grid: #2c2c2a;
+  --axis: #383835;
+
+  /* --- categorical series, in fixed slot order. Never cycled. */
+  --series-1: #3987e5; /* blue    — raw / primary */
+  --series-2: #d95926; /* orange  — motion / accelerometer */
+  --series-3: #199e70; /* aqua    — filtered / recovered */
+  --series-4: #c98500; /* yellow  */
+  --series-5: #d55181; /* magenta */
+  --series-6: #008300; /* green   */
+
+  /* --- status. Reserved; never reused as a series colour. */
+  --good: #0ca30c;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+
+  /* --- interactive */
+  --accent: #3987e5;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(57, 135, 229, 0.16);
+  --focus: #6da7ec;
+
+  /* --- geometry */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-pill: 999px;
+
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 12px 40px rgba(0, 0, 0, 0.55);
+
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  --rail-w: 232px;
+  --topbar-h: 56px;
+  --dock-h: 104px;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --plane: #f9f9f7;
+  --surface: #fcfcfb;
+  --surface-raised: #f2f1ed;
+  --surface-sunken: #efeeea;
+  --surface-hover: #eae9e4;
+
+  --ink: #0b0b0b;
+  --ink-secondary: #52514e;
+  --ink-muted: #898781;
+
+  --border: rgba(11, 11, 11, 0.1);
+  --border-strong: rgba(11, 11, 11, 0.2);
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+
+  --accent: #2a78d6;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(42, 120, 214, 0.12);
+  --focus: #1c5cab;
+
+  --shadow-1: 0 1px 2px rgba(11, 11, 11, 0.08);
+  --shadow-2: 0 4px 16px rgba(11, 11, 11, 0.1);
+  --shadow-3: 0 12px 40px rgba(11, 11, 11, 0.14);
+}
